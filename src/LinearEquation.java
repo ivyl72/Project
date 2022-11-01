@@ -1,55 +1,107 @@
 public class LinearEquation {
 
-        private String cord1;
-        private String cord2;
+    private int x1;
+    private int y1;
+    private int x2;
+    private int y2;
 
-        /**
-         * PRECONDITION: x1 and x2 are NOT equal (client programs are responsible for ensuring
-         * this precondition is not violated)
-         */
-        public LinearEquation(String cord1, String cord2) {
-                System.out.println("The two points are: " + cord1 + "and" + cord2);
+
+    public LinearEquation(int x1, int y1, int x2, int y2) {
+        this.x1 = x1;
+        this.x2 = x2;
+        this.y1 = y1;
+        this.y2 = y2;
+    }
+
+/* Calculates and returns distance between (x1, y1) and (x2, y2), rounded to
+   the nearest hundredth */
+    public double distance() {
+        double xS = Math.pow(((double) x2 - x1), 2);
+        double yS = Math.pow(((double) y2 - y1), 2);
+        double tgt = xS + yS;
+        double distance = Math.sqrt(tgt);
+        return roundedToHundredth(distance);
+    }
+
+/* Calculates and returns the slope of the line between (x1, y1) and
+   (x2, y2), rounded to the nearest hundredth */
+    public double slope() {
+        double slope = (double) (y2 - y1) / (x2 - x1);
+        return roundedToHundredth(slope);
+    }
+
+    public double yIntercept() {
+        double yIntercept = y1 - (slope() * (x1));
+        return roundedToHundredth(yIntercept);
+    }
+
+    /* Returns a String that represents the linear equation of the line through points
+       (x1, y1) and (x2, y2) in slope-intercept (y = mx + b) form
+   */
+        public String equation() {
+            double numerator = y2 - y1;
+            double den = x2 - x1;
+            String newEquation = "";
+            String fraction = "";
+
+            if (numerator % den == 0) {
+                fraction = (int) (numerator / den) + "x";
+            }
+            if (slope() == 1) {
+                fraction = "x";
+            } else if (slope() == -1) {
+                fraction = "-x";
+            }
+            if (slope() < 0) {
+                fraction = "-" + (int) Math.abs(numerator) + "/" + (int) Math.abs(den) + "x";
+            } else if (slope() > 0) {
+                fraction = (int) Math.abs(numerator) + "/" + (int) Math.abs(den) + "x";
+            }
+            if (y1 == y2) {
+                newEquation = "y = " + y1;
+                return newEquation;
+            } else if (yIntercept() < 0) {
+                newEquation = "y= " + fraction + "-" + Math.abs(yIntercept());
+                return newEquation;
+            } else if (yIntercept() == 0) {
+                newEquation = "y= " + fraction;
+                return newEquation;
+            } else {
+                newEquation = "y = " + fraction + " + " + yIntercept();
+                return newEquation;
+            }
         }
 
-        public int X1Y1() {
-                int comma1 = cord1.indexOf(",");
-                if (cord1.length() == 5) {
-                int x1 = Integer.parseInt(cord1.substring(1, 2));
-                int y1 = Integer.parseInt(cord1.substring(3, 4));
-                return x1;
-                return y1;
-                }else if (comma1 == 4 && cord1.length() == 7) {
-                  int x1 = Integer.parseInt(cord1.substring(1, 3));
-                  int y1 = Integer.parseInt(cord1.substring(5, 7));
-                        return x1;
-                        return y1;
-                } else if (comma1 == 4 && cord1.length() == 6) {
-                 int x1 = Integer.parseInt(cord1.substring(1, 3));
-                 int y1 = Integer.parseInt(cord1.substring(5, 6));
-                        return x1;
-                        return y1;
-                        }
-                }
-
-        public int X2Y2() {
-                int comma2 = cord2.indexOf(",");
-                if (cord2.length() == 5) {
-                        int x2 = Integer.parseInt(cord2.substring(1, 2));
-                        int y2 = Integer.parseInt(cord2.substring(3, 4));
-                        return x2;
-                        return y2;
-                }else if (comma2 == 4 && cord2.length() == 7) {
-                        int x2 = Integer.parseInt(cord2.substring(1, 3));
-                        int y2 = Integer.parseInt(cord1.substring(5, 7));
-                        return x2;
-                        return y2;
-                } else if (comma2 == 4 && cord2.length() == 6) {
-                        int x2 = Integer.parseInt(cord1.substring(1, 3));
-                        int y2 = Integer.parseInt(cord1.substring(5, 6));
-                        return x2;
-                        return y2;
-                }
+        public String coordinateForX(double xValue) {
+            boolean equal = x1 == x2;
+            String nothing = "";
+            if(!equal){
+                double newY = (xValue * slope()) + yIntercept();
+                String xEquation = ("The point on the line is (" + xValue + "," + newY + ")");
+                return xEquation;
+            }
+            return nothing;
         }
+    /* "Helper" method for use elsewhere in your methods; returns the value toRound rounded
+        to the nearest hundredth */
+    public double roundedToHundredth(double toRound) {
+        toRound = Math.round(toRound * 100) / 100.0;
+        return toRound;
+
+    }
+
+/* Returns a string that includes all information about the linear equation, each on
+   separate lines: */
+    public String lineInfo() {
+        boolean equal = x1 == x2;
+        String result = "";
+        if (equal) {
+            result = ("These points are on a vertical line: x = " + x1);
+        } else {
+            result = ("The two points are: " + "(" + x1 + "," + y1 + ")" + " and " + "(" + x2 + "," + y2 + ")" + "\n" + "The equation of the line between these points is: " + equation() + "\n" + "The slope of this line is: " + slope() + "\n" + "The y-intercept of the line is: " + yIntercept() + "\n" + "The distance between the two points is: " + distance());
+        }
+            return result;
+    }
 }
 
 
